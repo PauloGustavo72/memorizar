@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 
 import br.com.memorizar.modelo.Usuario;
+import br.com.memorizar.servico.FraseServico;
 import br.com.memorizar.servico.UsuarioServico;
 
 
@@ -23,6 +24,9 @@ public class LoginControle {
 	
 	@Autowired
 	private UsuarioServico usuarioServico;
+	
+	@Autowired
+	private FraseServico fraseServico;
 	
 	@RequestMapping("/")
     public String inicio(Model model) {
@@ -41,6 +45,7 @@ public class LoginControle {
 			return null;
 		 
 		setAtributosDaSessao(session, usuario);
+		session.setAttribute("frases", fraseServico.buscaFrasesPorUsuario((Usuario) session.getAttribute("usuarioLogado")));
 		
 		return gson.toJson("frase");
 	}

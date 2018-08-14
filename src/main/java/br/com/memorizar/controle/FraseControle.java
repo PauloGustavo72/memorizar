@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
@@ -31,10 +30,10 @@ public class FraseControle {
 	private Gson gson;
 
 	@Autowired
-	FraseRepositorio fraseRepositorio;
+	private FraseRepositorio fraseRepositorio;
 
 	@Autowired
-	FraseServico fraseServico;
+	private FraseServico fraseServico;
 
 	@GetMapping()
 	public String teste(Model model) {
@@ -53,15 +52,15 @@ public class FraseControle {
 		frase.setFrasePortugues(fraseDTO.getFrasePortugues());
 		frase.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		fraseRepositorio.save(frase);
-
+		
+		session.setAttribute("frases", fraseServico.buscaFrasesPorUsuario((Usuario) session.getAttribute("usuarioLogado")));
 		return gson.toJson("Frase cadastrada com sucesso");
 	}
 
 	@GetMapping("/listarFrase")
-	public ModelAndView listaFrases(HttpSession session) {
-		ModelAndView mv = new ModelAndView("listaFrase");
-		mv.addObject("frases", fraseServico.buscaFrasesPorUsuario((Usuario) session.getAttribute("usuarioLogado")));
-		return mv;
+	public String listaFrases(HttpSession session) {
+//		session.setAttribute("frases", fraseServico.buscaFrasesPorUsuario((Usuario) session.getAttribute("usuarioLogado")));
+		return "listaFrase";
 	}
 
 	@PutMapping("/editarFrase")
@@ -78,6 +77,8 @@ public class FraseControle {
 		frase.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		
 		fraseRepositorio.save(frase);
+		
+		session.setAttribute("frases", fraseServico.buscaFrasesPorUsuario((Usuario) session.getAttribute("usuarioLogado")));
 
 		return gson.toJson("Frase editada com sucesso");
 	}
