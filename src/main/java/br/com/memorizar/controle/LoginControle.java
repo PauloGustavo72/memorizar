@@ -17,7 +17,7 @@ import br.com.memorizar.servico.UsuarioServico;
 
 
 @Controller
-public class Controle {
+public class LoginControle {
 
 	private Gson gson = new Gson();
 	

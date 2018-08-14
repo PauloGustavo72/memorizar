@@ -9,23 +9,109 @@
 <title>Listar Frase</title>
 </head>
 
-<script src="../webjars/jquery/1.9.1/jquery.min.js"></script>
-<link href="../webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-	rel="stylesheet" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+
+
 <body>
-	<h1>Fora do c:</h1>
 
 	<c:forEach items="${frases}" var="f">
-		<h1>Entrou</h1>
-		<h2>${f.fraseIngles }</h2>
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title" data-toggle="collapse"
+						data-target="#${f.id }" data-parent="#paineis-sobre">${f.fraseIngles}</h3>
+				</div>
+				<div id="${f.id }" class="collapse">
+					<div class="panel-body">
+						<div class="container">
+							<div class="row">
+								<div class="col-sm-4">
+									<form>
+										<div class="form-group">
+											<label for="fraseIngles">Frase em Inglês</label> <input type="text"
+												class="form-control" id="fraseIngles${f.id }" value="${f.fraseIngles }" />
+											
+											<label for="frasePortugues">Frase em Português</label> <input type="text"
+												class="form-control" id="frasePortugues${f.id }" value="${f.frasePortugues }" >
+										</div>
+										<button onclick="editarFrase(${f.id});" type="submit"
+											class="btn btn-primary">Editar</button>
+										<button onclick="excluirFrase(${f.id});" type="submit"
+											class="btn btn-primary">Excluir</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</c:forEach>
 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 data-toggle="collapse" data-target="#1" >Panel heading without title</h3>
-		</div>
-		<div id="1" class="panel-body">Panel content</div>
-	</div>
 
-</body>
+
+	</body>
+	<script type="text/javascript">
+	function editarFrase(id){
+		
+		var json = {
+				"id"		  : id,	
+				"fraseIngles" : $("#fraseIngles" + id).val(),
+				"frasePortugues" : $("#frasePortugues" + id).val()
+		}
+		$.ajax({
+			url: "/frase/editarFrase",
+			  method: "PUT",
+			  data: JSON.stringify(json),
+			  dataType: "json",
+			  contentType: 'application/json; charset=utf-8',
+			  mimeType: 'application/json; charset=utf-8',
+			  async   : false,
+			  success : function(data) {
+				  alert (data);
+			  },
+			  error : function() {
+				  alert ("Não editou");
+			  }
+
+		});
+	}
+	
+	function excluirFrase(id){
+		
+		$.ajax({
+			url: "/frase/excluirFrase/" + id,
+			  method: "DELETE",
+			  dataType: "json",
+			  contentType: 'application/json; charset=utf-8',
+			  mimeType: 'application/json; charset=utf-8',
+			  async   : false,
+			  success : function(data) {
+				  alert (data);
+			  },
+			  error : function() {
+				  alert ("Não editou");
+			  }
+
+		});
+	}
+	</script>
 </html>
